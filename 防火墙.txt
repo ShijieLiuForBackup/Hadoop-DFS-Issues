@@ -1,0 +1,23 @@
+关闭虚拟机防火墙：
+关闭命令：  service iptables stop
+永久关闭防火墙：chkconfig iptables off
+两个命令同时运行，运行完成后查看防火墙关闭状态
+service iptables status
+1 关闭防火墙-----service iptables stop 
+2 启动防火墙-----service iptables start 
+3 重启防火墙-----service iptables restart 
+4 查看防火墙状态--service iptables status 
+5 永久关闭防火墙--chkconfig iptables off 
+6 永久关闭后启用--chkconfig iptables on
+
+键入service iptables status/start/restart无任何反应
+
+首先要确保进入管理员（su）用户，或者在service iptables status/start/restart前加上sudo，
+
+输入命令后还是没反应，则初始化iptables。
+
+iptables -F   
+
+sudo service iptables save
+
+sudo service iptables restart

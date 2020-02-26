@@ -1,0 +1,44 @@
+背景：
+glibc是GNU发布的libc库，即c运行库。glibc是linux系统中最底层的api，几乎其它任何运行库都会依赖于glibc。glibc除了封装linux操作系统所提供的系统服务外，它本身也提供了许多其它一些必要功能服务的实现。
+Linux的很多命令都是依赖libc.so.6的动态链接库，如果您不小心把它给删除了，基本上所有命令都不能使用了
+问题：
+万一  rm -r libc.so.6 软链接的 libc-2.12，
+解决方法：
+glibc下载地址 ：http://ftp.gnu.org/gnu/glibc/
+[root@localhost ~]# LD_PRELOAD=/lib64/libc-2.12.so ln -s /lib64/libc-2.12.so /lib64/libc.so.6
+注：目前CentOS 6.x 64位的glibc的版本是 v2.12 ;
+试验模拟现场：删除文件，后恢复（前提没有退出终端，也没有重启服务器）
+在服务器查看/lib64目录：
+libc.so.6 是软链接文件，链接的源文件就是libc-2.12.so 文件，删除软链接文件，可以使用上面的方法恢复；
+[root@localhost lib64]# ll libc*
+-rwxr-xr-x. 1 root root 1923352 May 10  2016 libc-2.12.so
+lrwxrwxrwx. 1 root root      12 Aug  3 10:18 libc.so.6 -> libc-2.12.so
+操作过程：
+删除文件，之后ls cp 命令无法使用；
+[root@localhost lib64]# rm -f libc.so.6
+[root@localhost lib64]# ls -lh libc*
+ls: error while loading shared libraries: libc.so.6: cannot open shared object file: No such file or directory
+[root@localhost lib64]# cp libc-2.12.so /tmp/
+cp: error while loading shared libraries: libc.so.6: cannot open shared object file: No such file or directory
+重新加载
+[root@localhost lib64]# LD_PRELOAD=/lib64/libc-2.12.so ln -s /lib64/libc-2.12.so /lib64/libc.so.6
+可以使用cp ls 命令，恢复成功；
+[root@localhost lib64]# cp libc-2.12.so /tmp/
+[root@localhost lib64]# ls -lh libc*
+-rwxr-xr-x. 1 root root 1.9M May 10  2016 libc-2.12.so
+lrwxrwxrwx  1 root root   19 Nov 25 12:17 libc.so.6 -> /lib64/libc-2.12.so
+2. 解决方法：
+现在有两个办法，重新编译glibc.2.14版本，安装后专门给hadoop使用，这个有点危险。
+
+第二个办法直接在log4j日志中去除告警信息。在//usr/local/hadoop-2.5.2/etc/hadoop/log4j.properties文件中添加
+
+log4j.logger.org.apache.hadoop.util.NativeCodeLoader=ERROR
+3.解决方法：
+通过 rmp 来安装别人已经编译好的模块。
+这个办法是真简单，一次成功。
+链接: https://pan.baidu.com/s/1KCsAdQE6uaJ0DQEewQxEnQ 提取码: sbui
+解压后进入该文件夹目录，输入如下安装命令：
+rpm -Uvh glibc-2.14.1-6.x86_64.rpm glibc-common-2.14.1-6.x86_64.rpm glibc-headers-2.14.1-6.x86_64.rpm glibc-devel-2.14.1-6.x86_64.rpm nscd-2.14.1-6.x86_64.rpm
+安装完后确认：
+ strings /lib64/libc.so.6 | grep GLIBC
+

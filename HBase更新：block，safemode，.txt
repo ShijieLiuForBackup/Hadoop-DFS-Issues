@@ -1,0 +1,17 @@
+# 查看hdfs safe mode
+hadoop dfsadmin -safemode get
+
+# 退出hdfs safe mode
+hadoop dfsadmin -safemode leave
+
+# 查看dfs 状态报告
+hadoop dfsadmin -report
+
+# 查看损坏文件、当前hdfs的副本数
+https://blog.csdn.net/Post_Yuan/article/details/103489879
+hdfs fsck /
+或者
+hadoop fsck -locations
+
+# 查看Hadoop文件系统：
+bin/hadoop fs -ls /hbase

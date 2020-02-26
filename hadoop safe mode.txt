@@ -1,0 +1,14 @@
+问题描述：
+org.apache.hadoop.hdfs.server.namenode.SafaModeException: Cannot ....................................: Name node is in safe mode.
+
+原因及解决：
+刚刚启动Hadoop的时候，Hadoop会进入安全模式， 此时无法对hdfs进行 上传，修改， 删除文件的操作。
+
+查看当前hadoop安全模式的开关状态：
+hadoop dfsadmin -safemode get
+
+打开安全模式：
+hadoop dfsadmin -safemode enter
+
+关闭安全模式：
+hadoop dfsadmin -safemode leave

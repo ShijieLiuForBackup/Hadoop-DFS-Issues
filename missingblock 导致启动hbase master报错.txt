@@ -1,0 +1,13 @@
+在手动清楚了hdfs上的一些坏块以后导致启动hbase master报错
+查看hbase的报警日志
+
+
+
+
+
+2017-01-04 10:03:14,164 FATAL [kiwi02:60000.activeMasterManager] master.HMaster: Unhandled exception. Starting shutdown.
+org.apache.hadoop.hbase.util.FileSystemVersionException: HBase file layout needs to be upgraded. You have version null and I want version 8. Consult http://hbase.apache.org/book.html for further information about upgrading HBase. Is your hbase.rootdir valid? If so, you may need to run 'hbase hbck -fixVersionFile'.
+
+
+初步怀疑，是hdfs中，删除坏块导致了hbase的配置文件有损坏
+在hdfs中，删除hbase的目录，重启hbase master 问题解除

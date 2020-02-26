@@ -1,0 +1,17 @@
+可能因为超时导致hbase与zook的session中断，默认3分钟，可修改hbase-site.xml配置：
+
+<property>
+
+     <name>zookeeper.session.timeout</name>
+
+     <value>240000</value>
+
+    <!--默认: 180000 ：zookeeper 会话超时时间，单位是毫秒 -->
+
+</property>
+
+注：这个时间还依赖于zookeeper自身的超时时间，如果太短也需要设置一下，在zookeeper的配置文件中配置：
+
+
+minSessionTimeout，maxSessionTimeout。
+————————————————

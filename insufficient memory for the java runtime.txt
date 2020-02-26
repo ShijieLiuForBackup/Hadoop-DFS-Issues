@@ -1,0 +1,44 @@
+命令查看系统限制：ulimit -a
+https://www.cnblogs.com/zengkefu/p/5649407.html
+
+查看系统限制
+
+[root@NameNode ~]# ulimit -a
+core file size          (blocks, -c) unlimited
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 2066288
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+
+
+文件数太少了。查看系统的/etc/security/limit.conf，etc/sysctl.conf ，换JDK版本等等，均无果！
+
+在Root下设置 ulimit -c unlimited后，仍然不行。
+
+[hadoop@NameNode mahout-distribution-0.9]$  ulimit -a
+
+max user processes              (-u) 1024
+virtual memory          (kbytes, -v) unlimited
+
+
+经过查证，再在/etc/security/下一看。centos6多出来一个limits.d目录，下面有个文件： 90-nproc.config
+此文件内容：
+# Default limit for number of user's processes to prevent
+# accidental fork bombs.
+# See rhbz #432903 for reasoning.
+
+
+*          soft    nproc     1024
+root       soft    nproc     unlimited
+这里限制了1024呀，果断注释。
+
+问题解决。
+————————————————
+
+
+也有可能是虚拟机的设置RAM内存太小了！！！！关闭虚拟机
+去设置里增加到4096吧，不用吝啬，虚拟机只占用物理机硬盘内存

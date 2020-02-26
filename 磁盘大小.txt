@@ -1,0 +1,11 @@
+swap的值都是安装系统的时候设置好的，一般设置为内存的两倍大小。使用过程中发现swap值过小只能添加。
+用free -m 命令查看当前swap大小
+https://www.cnblogs.com/zdz8207/p/linux-centos-swap.html
+
+查看目前内存配置情况
+第一种方法：运行free -h
+第二种方法：运行 swapon -s
+如果没有任何输出，则代表没有配置
+https://www.jianshu.com/p/74106b9d5914
+
+

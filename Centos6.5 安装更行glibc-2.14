@@ -1,0 +1,42 @@
+CentOS默认的glibc版本为2.12.1, 网上给出的升级至glibc-2.14.1的方法, 都是用glibc-2.14.1.tar.gz,如下
+
+tar -vzxf glibc-2.14.1.tar.gz
+
+cd glibc-2.14.1
+
+mkdir build
+
+cd build
+
+../configure --prefix==/opt/glibc-2.14.1
+
+make -j4
+
+make install
+
+ln -sf /opt/glibc-2.14.1/lib/libc-2.14.1.so  /lib64/libc.so.6
+
+但/usr/bin/下面的ldd, locale仍然是之前的2.12.1版本, 会有兼容性的问题
+
+
+
+经测试, 用glibc-2.14.1-6.x86_64.rpm及相关的rpm安装不会出现兼容性的问题, 需要下载的rpm包如下
+
+glibc-2.14.1-6.x86_64.rpm
+
+glibc-common-2.14.1-6.x86_64.rpm
+
+glibc-headers-2.14.1-6.x86_64.rpm 
+
+glibc-devel-2.14.1-6.x86_64.rpm 
+
+nscd-2.14.1-6.x86_64.rpm
+
+下载地址:http://pan.baidu.com/s/1sjLUcFz, 或者去http://rpm.pbone.net/ 搜索以上rpm包名下载
+
+最后安装命令如下:
+
+rpm -Uvh glibc-2.14.1-6.x86_64.rpm glibc-common-2.14.1-6.x86_64.rpm glibc-headers-2.14.1-6.x86_64.rpm glibc-devel-2.14.1-6.x86_64.rpm nscd-2.14.1-6.x86_64.rpm
+
+完成
+

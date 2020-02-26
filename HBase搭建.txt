@@ -1,0 +1,41 @@
+搭建Zookeeper+Hadoop集群之后，需要搭建HBase。
+HBase是啥：
+HBase是一个高可靠性，高性能，面向列，可伸缩的分布式存储系统，
+可在廉价的PC服务器（个人电脑）上搭建大规模结构化的存储集群
+与MapReduce的离线批处理计算框架不同，HBase是一个可以随机访问的存储和检索数据平台
+不是关系型数据库，不支持SQL，
+大。处理大而且稀疏的表（一个表有上亿行，上百万列）
+面向列。列族：column family。的存储和权限控制，列（族）独立搜索
+稀疏。对于为空（NULL）的列，并不占用存储空间。So，表可以设计的很稀疏。
+无模式。每一行都有一个可以排序的主键，和任意多的列，列可以根据需要动态增加，同一张表中不同的行可以有截然不同的列。
+数据多版本。每个单元中的数据可以有多个版本，默认情况下，版本号自动分配，版本号就是单元（cell）格插入时的时间戳（time stamp）。
+数据类型单一。都是字符串（string），没有类型。
+配置集群的过程中遇到的问题：
+General：
+namespaceID连接着namenode和datanode以及journalnode。datanode和journalnode通过namespaceID将自己绑定到namenode
+检查：
+[frank@s101] $ jps 							查看datanode和namenode是否启动正常。
+[frank@s101] $ tail -50f xxxxxxxxxxx.log 			查看日志文件。
+[frank@s101] $ hadoop dfsadmin -report 			检查节点下存储空间
+每个节点机器的 /mnt/data/app/data/hadoop/dfs/data(name)/current 下的VERSION文件里的clusterID是否一致
+
+org.apache.hadoop.ipc.RemoteException(java.io.IOException)
+Hadoop启动时，datanode未启动，nodemanager启动了，
+当我们使用hdfs namenode -format格式化namenode时，会在namenode数据文件夹（配置文件中dfs.name.dir的路径）中保存一个current/VERSION文件，记录clusterID，datanode中保存的current/VERSION文件中的clustreID的值是上一次格式化保存的clusterID，这样，datanode和namenode之间的ID不一致，datanode启动失败。
+
+第二台namenode机子的namenode未启动
+手动在各个节点中删除tmp文件夹内容的内容然后从新启动datanode服务就可以启动了
+
+基本上都可以总结为 hdfs namenode -format 次数过多导致 集群ID不一致，clusterID /mnt/data/app/data/hadoop/dfs/data(name)/current/VERSION
+多次对namenode格式化后，会生成新的clusterID，其他的节点的进程的clusterID还是第一次格式化同步之后的，clusterID版本不一致，导致start-all.sh时第二台namenode不能启动，有时候三个datanode也不能启动，即便在各自的节点上单独启动，但是在web端访问时，三个datanode节点进程都不能正常显示，第二台standby的namenode也不能访问
+解决办法：
+将第一个active状态的namenode节点VERSION文件中的clusterID复制更新到每个节点进程的VERSION文件里，更新clusterID值，使其与第一个namenode的clusterID版本一致。
+难处：
+不单单要改第二个namenode进程的VERSION文件里的clusterID，三个datanode进程和三个journalnode进程里面的VERSION文件的clusterID都需要改为同一个版本，Namesoace ID和 Block pool ID版本也需要			一致。未验证，太麻烦，知识理论上感觉ok
+2. 删除所有节点版本目录下dfs目录下生成的文件，重新在第二个namenode上执行同步dfs namenode -bootstrapStandby即可（这条命令我执行了，但是未成功）。
+/mnt/data/app/data/hadoop/dfs/name/current
+/mnt/data/app/data/hadoop/dfs/data/current
+删除dfs下面的文件，包括name和data文件夹。 路径一般在hadoop的配置文件中的core-site.xml 
+然后在s101执行 hdfs namenode -format
+
+dfs.namenode.name.dir 路径下的两个路径文件的CURRENT 都要检查！！！！！！

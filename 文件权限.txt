@@ -1,0 +1,18 @@
+命令行：
+
+stat -c '%A %a %n' * 
+
+用例
+
+[frank@s101]$ stat -c '%A %a %n' *
+-rw-rw-r-- 664 auth.php
+-rw-rw-r-- 664 fulfillment.php
+drwxrwxr-x 775 logs
+-rw-rw-r-- 664 token.php
+[frank@s101]$
+
+$ sudo chmod 750 /app/hadoop/tmp
+
+
+给这个路径下的data文件夹的所有文件赋予frank的权限
+$ chown -R frank data

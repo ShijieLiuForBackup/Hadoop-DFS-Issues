@@ -1,0 +1,27 @@
+查看zookeeper残留文件，
+find / -name "zookeeper_server.pid" 
+删除这个文件，然后重启zookeeper
+
+查看启动错误信息：
+./zkServer.sh start-foreground
+问题：
+Failed to write core dump. Core dumps have disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again.
+原因：
+nano /etc/hosts 路径下的0.0.0.0 localhost被删了。。。。
+
+问题：
+zkServer.sh status 
+It is probably not running.
+可能有以下几个原因：
+
+第一，zoo.cfg文件配置出错：dataLogDir指定的目录未被创建；
+
+第二，myid文件中的整数格式不对，或者与zoo.cfg中的server整数不对应
+
+第三，防火墙未关闭；
+
+第四，2181端口被占用；
+
+第五，zoo.cfg文件中主机名出错；
+
+第六，hosts文件中，本机的主机名有两个对应，只需保留主机名和ip地址的映射

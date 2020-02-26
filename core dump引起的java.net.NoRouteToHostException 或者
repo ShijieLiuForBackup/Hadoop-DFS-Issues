@@ -1,0 +1,4 @@
+https://blog.csdn.net/m200674067/article/details/79838630
+Not enough space for memory
+内存不够导致的无法启东相关服务：
+关闭虚拟机 --》 设置--》System --》Base Memory 调整内存。。。

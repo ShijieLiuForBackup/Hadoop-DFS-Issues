@@ -1,0 +1,30 @@
+org.apache.hadoop.hdfs.BlockMissingException: Could not obtain block:
+
+
+
+防火墙记得关掉；
+查看DataNode是否启动；
+有些数据块是损坏了，可以命令查看
+hadoop fsck  <path>
+
+1
+然后可以删除损坏的数据块
+hadoop fsck  <path> -delete
+
+1
+hadoop fsck其他参数解释：
+ <path>  start checking from this path
+        -move   move corrupted files to /lost+found
+        -delete delete corrupted files
+        -files  print out files being checked
+        -openforwrite   print out files opened for write
+        -includeSnapshots       include snapshot data if the given path indicates a snapshottable directory or there are snapshottable directories under it
+        -list-corruptfileblocks print out list of missing blocks and files they belong to
+        -blocks print out block report
+        -locations      print out locations for every block
+        -racks  print out network topology for data-node locations
+
+        -maintenance    print out maintenance state node details
+        -blockId        print out which file this blockId belongs to, locations (nodes, racks) of this block, and other diagnostics info (under replicated, corrupted or not, etc)
+
+————————————————

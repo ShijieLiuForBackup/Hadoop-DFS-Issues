@@ -1,0 +1,4 @@
+1. 切换到root用户。su root
+2.  命令：
+# nano /etc/sudoers
+添加 用户名	ALL=(ALL)	ALL

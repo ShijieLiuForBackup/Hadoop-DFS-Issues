@@ -1,0 +1,13 @@
+由于NameNode状态的变更，很多mapreduce程序都得改来改去，这个时候，只需要重启secondary namenode（显示为active的）机器上面DFSZKFailoverController进程即可将active/standby状态切换回来，
+
+               （3.1）先停掉  hadoop-daemon.sh stop zkfc
+
+               （3.2）重启  hadoop-daemon.sh start  zkfc
+————————————————
+Hadoop搭建配置主备nameNode,主备不自动切换的问题
+
+namenode的自动切换，要安装一个包
+yum install -y psmisc
+
+能实现，当一个active的nameNode挂掉，另一个 standby 的nameNode自动激活
+————————————————

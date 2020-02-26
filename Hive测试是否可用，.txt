@@ -1,0 +1,11 @@
+在WebUI 看数据的时候会遇到以下问题：
+https://blog.csdn.net/zsyoung/article/details/100745378
+无法查看Browse Directory：的东西
+            查看 nn1状态：
+            Hdfs haadmin -getServiceState nn1
+            把standby的nn1 调整成active，先把active的nn2 standby，
+
+
+
+
+快照在配置笔记里！！！！！

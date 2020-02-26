@@ -1,0 +1,11 @@
+问题描述：
+Underlying cause:java.sql.SQLException: Access denied for user ‘hive’@’localhost’ (using password: YES)
+
+原因：
+在MySQL里创建metastore—db数据库的时候，将数据库下所有的表的权限赋予hive用户，配置hive_site.xml里的密码，刷新系统权限的时候：
+mysql> GRANT ALL PRIVILEGES ON  *.* TO 'hive'@'%' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON  *.* TO 'hive'@'localhost' WITH GRANT OPTION;
+红色的为后来修改，解决问题。
+
+https://blog.csdn.net/liuzhuang2017/article/details/82051112
+
